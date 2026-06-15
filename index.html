@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Plan Callisthénique</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap');
+:root{--bg:#0f1117;--surface:#181c27;--card:#1e2333;--border:#2a3050;--accent:#4f8ef7;--accent2:#38e0a1;--warm:#f7834f;--text:#e8ecf4;--muted:#8892aa;--radius:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:48px}
+.hero{background:linear-gradient(135deg,#0f1117 0%,#161d35 60%,#0f1117 100%);padding:28px 18px 20px;text-align:center;border-bottom:1px solid var(--border)}
+.hero-label{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:23px;font-weight:700;line-height:1.25;margin-bottom:9px}
+.hero h1 span{color:var(--accent2)}
+.hero-sub{font-size:13px;color:var(--muted);max-width:310px;margin:0 auto 13px;line-height:1.6}
+.pills{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+.pill{background:var(--card);border:1px solid var(--border);border-radius:100px;padding:4px 11px;font-size:11px;font-weight:500;color:var(--muted)}
+.pill strong{color:var(--text)}
+.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:sticky;top:0;z-index:100}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;padding:12px 15px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;outline:none;transition:color .2s,border-color .2s}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.section{display:none;padding:14px}
+.section.active{display:block}
+.info-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;margin-bottom:12px}
+.info-box h3{font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:6px}
+.info-box p,.info-box li{font-size:13px;color:var(--muted);line-height:1.7}
+.info-box ul{padding-left:15px}
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:14px}
+.day-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 2px;text-align:center}
+.day-name{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:4px}
+.day-type{font-size:9px;font-weight:700;line-height:1.3}
+.day-cell.push .day-type{color:var(--warm)}
+.day-cell.pull .day-type{color:var(--accent)}
+.day-cell.legs .day-type{color:var(--accent2)}
+.day-cell.rest .day-type{color:var(--muted)}
+.workout-header{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;margin-bottom:12px;display:flex;align-items:center;gap:11px}
+.workout-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.workout-icon.push{background:rgba(247,131,79,.15)}
+.workout-icon.pull{background:rgba(79,142,247,.15)}
+.workout-icon.legs{background:rgba(56,224,161,.15)}
+.workout-meta h3{font-size:15px;font-weight:700;margin-bottom:2px}
+.workout-meta p{font-size:11px;color:var(--muted)}
+.section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin:16px 0 8px}
+.exercise-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:11px;overflow:hidden}
+.exercise-header{padding:12px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;user-select:none;-webkit-tap-highlight-color:transparent}
+.ex-left{display:flex;align-items:center;gap:10px}
+.ex-num{width:26px;height:26px;border-radius:7px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ex-num.push{background:rgba(247,131,79,.2);color:var(--warm)}
+.ex-num.pull{background:rgba(79,142,247,.2);color:var(--accent)}
+.ex-num.legs{background:rgba(56,224,161,.2);color:var(--accent2)}
+.ex-num.core{background:rgba(168,85,247,.2);color:#c084fc}
+.ex-info h4{font-size:13px;font-weight:600;margin-bottom:2px}
+.ex-info p{font-size:11px;color:var(--muted)}
+.ex-sets{font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap}
+.ex-arrow{color:var(--muted);transition:transform .25s;font-size:13px;flex-shrink:0}
+.exercise-card.open .ex-arrow{transform:rotate(180deg)}
+.exercise-body{display:none;padding:0 13px 13px;border-top:1px solid var(--border)}
+.exercise-card.open .exercise-body{display:block}
+
+/* GIF réel */
+.gif-wrap{margin:12px 0;border-radius:10px;overflow:hidden;background:#0a0d18;text-align:center;line-height:0}
+.gif-wrap img{width:100%;max-height:200px;object-fit:cover;display:block}
+.gif-label{font-size:10px;color:var(--muted);padding:6px 10px;background:#0a0d18;display:block;line-height:1.4;text-align:left}
+
+/* iframe YouTube */
+.yt-wrap{margin:12px 0;border-radius:10px;overflow:hidden;background:#000;position:relative;aspect-ratio:16/9}
+.yt-wrap iframe{width:100%;height:100%;border:none;display:block}
+
+.ex-desc{font-size:13px;color:var(--muted);line-height:1.7;margin:8px 0}
+.ex-steps{list-style:none;margin-bottom:4px}
+.ex-steps li{font-size:12px;color:var(--muted);padding:5px 0 5px 20px;position:relative;line-height:1.5;border-bottom:1px solid rgba(255,255,255,.04)}
+.ex-steps li:last-child{border-bottom:none}
+.ex-steps li::before{content:attr(data-n);position:absolute;left:0;font-weight:700;font-size:10px;color:var(--accent);top:6px}
+.timer-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:13px;text-align:center}
+.timer-display{font-family:'Space Grotesk',monospace;font-size:52px;font-weight:700;color:var(--accent);letter-spacing:-2px;line-height:1;margin:10px 0}
+.timer-label{font-size:11px;color:var(--muted);margin-bottom:3px}
+.timer-btn-row{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.timer-btn{border:none;border-radius:9px;padding:9px 17px;font-size:12px;font-weight:700;cursor:pointer}
+.timer-btn.start{background:var(--accent);color:#fff}
+.timer-btn.stop{background:var(--warm);color:#fff}
+.timer-btn.reset{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.preset-row{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:9px}
+.preset-btn{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:5px 11px;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer}
+.macro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.macro-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:11px 6px;text-align:center}
+.macro-card .val{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;margin-bottom:2px}
+.macro-card .unit{font-size:9px;color:var(--muted)}
+.macro-card .name{font-size:10px;color:var(--muted);margin-top:1px}
+.prog-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;margin-bottom:10px}
+.prog-card h4{font-size:13px;font-weight:700;margin-bottom:9px}
+.prog-step{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
+.prog-step:last-child{border-bottom:none}
+.prog-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.prog-step p{font-size:12px;color:var(--muted);line-height:1.6}
+.prog-step strong{color:var(--text)}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">💪 Programme Callisthénique</div>
+  <h1>Force au poids du corps<br><span>20–30 min/jour</span></h1>
+  <p class="hero-sub">GIFs réels + vidéos YouTube intégrées pour chaque exercice.</p>
+  <div class="pills">
+    <div class="pill">🚲 Elliptique <strong>midi</strong></div>
+    <div class="pill">⚖️ <strong>97 kg</strong> · 180 cm</div>
+    <div class="pill">⏱ <strong>25 min</strong>/séance</div>
+    <div class="pill">📅 <strong>6 jours</strong>/sem</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('programme',this)">Programme</button>
+  <button class="tab" onclick="showTab('push',this)">💥 Push</button>
+  <button class="tab" onclick="showTab('pull',this)">🔗 Pull</button>
+  <button class="tab" onclick="showTab('legs',this)">🦵 Jambes</button>
+  <button class="tab" onclick="showTab('timer',this)">⏱ Timer</button>
+  <button class="tab" onclick="showTab('nutrition',this)">🥗 Nutrition</button>
+  <button class="tab" onclick="showTab('progression',this)">📈 Progression</button>
+</div>
+
+<!-- PROGRAMME -->
+<div id="section-programme" class="section active">
+  <div class="info-box"><h3>🎯 Stratégie</h3><p>Tu fais déjà 1h de cardio le midi — parfait. Le callisthénique vient <strong>en complément</strong> (matin ou soir) pour construire masse et force.</p></div>
+  <div class="section-title">Semaine type</div>
+  <div class="week-grid">
+    <div class="day-cell push"><div class="day-name">Lun</div><div class="day-type">Push</div></div>
+    <div class="day-cell pull"><div class="day-name">Mar</div><div class="day-type">Pull</div></div>
+    <div class="day-cell legs"><div class="day-name">Mer</div><div class="day-type">Jambes</div></div>
+    <div class="day-cell push"><div class="day-name">Jeu</div><div class="day-type">Push</div></div>
+    <div class="day-cell pull"><div class="day-name">Ven</div><div class="day-type">Pull</div></div>
+    <div class="day-cell legs"><div class="day-name">Sam</div><div class="day-type">Jambes</div></div>
+    <div class="day-cell rest"><div class="day-name">Dim</div><div class="day-type">Repos</div></div>
+  </div>
+  <div class="info-box"><h3>📐 Structure séance (25 min)</h3><ul>
+    <li><strong>3 min</strong> — Échauffement dynamique</li>
+    <li><strong>18–20 min</strong> — 3 exercices × 3 séries (45–75s repos)</li>
+    <li><strong>2 min</strong> — Étirements ciblés</li>
+  </ul></div>
+  <div class="info-box"><h3>⚠️ À ton niveau (97 kg)</h3><p>Commence par les variantes débutant. <strong>Régularité &gt; intensité.</strong></p></div>
+</div>
+
+<!-- PUSH -->
+<div id="section-push" class="section">
+  <div class="workout-header">
+    <div class="workout-icon push">💥</div>
+    <div class="workout-meta"><h3>Séance Push</h3><p>Lundi &amp; Jeudi · ~25 minutes</p></div>
+  </div>
+
+  <!-- POMPES -->
+  <div class="exercise-card">
+    <div class="exercise-header" onclick="toggleCard(this)">
+      <div class="ex-left"><div class="ex-num push">1</div><div class="ex-info"><h4>Pompes</h4><p>Pectoraux · Épaules · Triceps</p></div></div>
+      <div style="display:flex;align-items:center;gap:7px"><span class="ex-sets">3 × 8–12</span><span class="ex-arrow">▾</span></div>
+    </div>
+    <div class="exercise-body">
+      <div class="gif-wrap">
+        <img src="https://media3.giphy.com/media/Y0ewb1YgfjHg5Jo0OA/giphy.gif" alt="Push-up form" loading="lazy">
+        <span class="gif-label">GIF : pompe — forme correcte (vue de côté)</span>
+      </div>
+      <div class="yt-wrap">
+        <iframe src="https://www.youtube.com/embed/ba8tr1NzwXU?rel=0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      </div>
+      <div class="info-box"><h3>🟠 Variante débutant</h3><p>Pompes sur les genoux — réduit ~30% du poids. Ou pompes contre un mur.</p></div>
+      <ul class="ex-steps">
+        <li data-n="1">Mains à largeur d'épaules + 20 cm, doigts vers l'extérieur</li>
+        <li data-n="2">Corps aligné tête-talons, abdos contractés</li>
+        <li data-n="3">Descends jusqu'à frôler le sol (~2 sec)</li>
+        <li data-n="4">Pousse fort en expirant (1–2 sec)</li>
+        <li data-n="5">Ne verrouille pas les coudes en haut</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- DIPS -->
+  <div class="exercise-card">
+    <div class="exercise-header" onclick="toggleCard(this)">
+      <div class="ex-left"><div class="ex-num push">2</div><div class="ex-info"><h4>Dips sur chaise</h4><p>Triceps · Épaules · Poitrine basse</p></div></div>
+      <div style="display:flex;align-items:center;gap:7px"><span class="ex-sets">3 × 8–10</span><span class="ex-arrow">▾</span></div>
+    </div>
+    <div class="exercise-body">
+      <div class="gif-wrap">
+        <img src="https://media1.giphy.com/media/h86UsD8AlFfLmVs1s5/giphy.gif" alt="Dips exercise" loading="lazy">
+        <span class="gif-label">GIF : dips au poids du corps</span>
+      </div>
+      <div class="yt-wrap">
+        <iframe src="https://www.youtube.com/embed/jox1rb5krQI?rel=0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      </div>
+      <ul class="ex-steps">
+        <li data-n="1">Au bord d'une chaise solide, mains à la largeur des hanches</li>
+        <li data-n="2">Fesses hors de la chaise, jambes tendues (ou pliées si trop dur)</li>
+        <li data-n="3">Descends en pliant les coudes à 90°, dos proche de la chaise</li>
+        <li data-n="4">Pousse sur les paumes pour remonter</li>
+        <li data-n="5">⚠️ Coudes parallèles — ne les écarte pas</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PLANCHE -->
+  <div class="exercise-card">
+    <div class="exercise-header" onclick="toggleCard(this)">
+      <div class="ex-left"><div class="ex-num core">3</div><div class="ex-info"><h4>Planche (Plank)</h4><p>Abdos profonds · Lombaires</p></div></div>
+      <div style="display:flex;align-items:center;gap:7px"><span class="ex-sets">3 × 20–40s</span><span class="ex-arrow">▾</span></div>
+    </div>
+    <div class="exercise-body">
+      <div class="gif-wrap">
+        <img src="https://media2.giphy.com/media/d3mlADRlF7SMFQRy/giphy.gif" alt="Plank exercise" loading="lazy">
+        <span class="gif-label">GIF : planche — position correcte</span>
+      </div>
+      <div class="yt-wrap">
+        <iframe src="https://www.youtube.com/embed/pSHjTRCQxIw?rel=0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      </div>
+      <ul class="ex-steps">
+        <li data-n="1">Avant-bras au sol, coudes sous les épaules</li>
+        <li data-n="2">Corps en ligne droite talons → nuque</li>
+        <li data-n="3">Abdos contractés, nombril vers la colonne</li>
+        <li data-n="4">Respire normalement, regard vers le sol</li>
+        <li data-n="5">Débutant : planche sur genoux si &lt;20s difficile</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- PULL -->
+<div id="section-pull" class="section">
+  <div class="workout-header">
+    <div class="workout-icon pull">🔗</div>
+    <div class="workout-meta"><h3>Séance Pull</h3><p>Mardi &amp; Vendredi · ~25 minutes</p></div>
+  </div>
+
+  <!-- TRACTION AUSTRALIENNE -->
+  <div class="exercise-card">
+    <div class="exercise-header" onclick="toggleCard(this)">
+      <div class="ex-left"><div class="ex-num pull">1</div><div class="ex-info"><h4>Traction Australienne</h4><p>Dos large · Rhomboïdes · Biceps</p></div></div>
+      <div style="display:flex;align-items:center;gap:7px"><span class="ex-sets">3 × 6–10</span><span class="ex-arrow">▾</span></div>
+    </div>
+    <div class="exercise-body">
+      <div class="gif-wrap">
+        <img src="https://media3.giphy.com/media/sIpYAcTpJN2xbakrOg/giphy.gif" alt="Inverted row" loading="lazy">
+        <span class="gif-label">GIF : traction australienne (inverted row)</span>
+      </div>
+      <div class="yt-wrap">
+        <iframe src="https://www.youtube.com/embed/dnpDUwqMX04?rel=0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      </div>
+      <div class="info-box"><h3>📍 Où ?</h3><p>Sous une table solide ou un bureau bas. Attrape le bord à pleine main, vérifie qu'elle supporte ton poids.</p></div>
+      <ul class="ex-steps">
+        <li data-n="1">Allonge-toi sous la table, attrape le bord</li>
+        <li data-n="2">Corps tendu comme une planche, talons au sol</li>
+        <li data-n="3">Tire ta poitrine vers la table en serrant les omoplates</li>
+        <li data-n="4">Descends lentement en contrôle (2–3 sec)</li>
+        <li data-n="5">Progression : pieds surélevés sur une chaise</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SUPERMAN -->
+  <div class="exercise-card">
+    <div class="exercise-header" onclick="toggleCard(this)">
+      <div class="ex-left"><div class="ex-num pull">2</div><div class="ex-info"><h4>Superman</h4><p>Érecteurs du rachis · Fessiers · Trapèzes</p></div></div>
+      <div style="display:flex;align-items:center;gap:7px"><span class="ex-sets">3 × 12–15</span><span class="ex-arrow">▾</span></div>
+    </div>
+    <div class="exercise-body">
+      <div class="gif-wrap">
+        <img src="https://media4.giphy.com/media/xT0BKC0JxPEIkUCvjq/giphy.gif" alt="Superman exercise" loading="lazy">
+        <span class="gif-label">GIF : superman — renforcement du dos</span>
+      </div>
+      <div class="yt-wrap">
+        <iframe src="https://www.youtube.com/embed/z6PJMT2y8GQ?rel=0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      </div>
+      <p class="ex-desc">Anti-posture développeur par excellence. Renforce tous les muscles postérieurs, atrophiés après des heures assis.</p>
+      <ul class="ex-steps">
+        <li data-n="1">Face au sol, bras tendus devant, jambes droites</li>
+        <li data-n="2">Lève simultanément bras, poitrine ET jambes</li>
+        <li data-n="3">Tiens 2–3 sec en contractant fessiers et dos</li>
+        <li data-n="4">Redescends lentement</li>
+        <li data-n="5">Variante facile : alterner bras droit + jambe gauche</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ROWING SAC -->
+  <div class="exercise-card">
+    <div class="exercise-header" onclick="toggleCard(this)">
+      <div class="ex-left"><div class="ex-num pull">3</div><div class="ex-info"><h4>Rowing sac lesté</h4><p>Grand dorsal · Biceps · Épaules arrière</p></div></div>
+      <div style="display:flex;align-items:center;gap:7px"><span class="ex-sets">3 × 10–12</span><span class="ex-arrow">▾</span></div>
+    </div>
+    <div class="exercise-body">
+      <div class="yt-wrap">
+        <iframe src="https://www.youtube.com/embed/5W8F6MzZ8Rk?rel=0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      </div>
+      <p class="ex-desc">Sac à dos rempli de 5–10 kg de bouteilles d'eau. Penché à 45°, tire le coude vers le plafond en serrant l'omoplate.</p>
+      <ul class="ex-steps">
+        <li data-n="1">Penché à ~45°, dos plat, genoux légèrement fléchis</li>
+        <li data-n="2">Tiens le sac dans une main</li>
+        <li data-n="3">Tire le coude vers le plafond, omoplates serrées</li>
+        <li data-n="4">Descends lentement (2–3 sec)</li>
+        <li data-n="5">Toutes les reps d'un côté, puis change</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- LEGS -->
+<div id="section-legs" class="section">
+  <div class="workout-header">
+    <div class="workout-icon legs">🦵</div>
+    <div class="workout-meta"><h3>Séance Jambes &amp; Core</h3><p>Mercredi &amp; Samedi · ~25 minutes</p></div>
+  </div>
+
+  <!-- SQUAT -->
+  <div class="exercise-card">
+    <div class="exercise-header" onclick="toggleCard(this)">
+      <div class="ex-left"><div class="ex-num legs">1</div><div class="ex-info"><h4>Squat poids du corps</h4><p>Quadriceps · Fessiers · Ischios</p></div></div>
+      <div style="display:flex;align-items:center;gap:7px"><span class="ex-sets">3 × 15–20</span><span class="ex-arrow">▾</span></div>
+    </div>
+    <div class="exercise-body">
+      <div class="gif-wrap">
+        <img src="https://media3.giphy.com/media/13v55Ya4uWsXS/giphy.gif" alt="Squat exercise" loading="lazy">
+        <span class="gif-label">GIF : squat — descente et remontée contrôlées</span>
+      </div>
+      <div class="yt-wrap">
+        <iframe src="https://www.youtube.com/embed/aclHkVaku9U?rel=0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      </div>
+      <ul class="ex-steps">
+        <li data-n="1">Pieds largeur d'épaules, pointes légèrement vers l'ext.</li>
+        <li data-n="2">Bras tendus devant, regard droit devant</li>
+        <li data-n="3">Descends comme pour t'asseoir, genoux dans l'axe</li>
+        <li data-n="4">Cuisses parallèles au sol minimum</li>
+        <li data-n="5">Pousse dans les talons pour remonter</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- FENTES -->
+  <div class="exercise-card">
+    <div class="exercise-header" onclick="toggleCard(this)">
+      <div class="ex-left"><div class="ex-num legs">2</div><div class="ex-info"><h4>Fentes alternées</h4><p>Quadriceps · Fessiers · Équilibre</p></div></div>
+      <div style="display:flex;align-items:center;gap:7px"><span class="ex-sets">3 × 10/jambe</span><span class="ex-arrow">▾</span></div>
+    </div>
+    <div class="exercise-body">
+      <div class="gif-wrap">
+        <img src="https://media3.giphy.com/media/13kwKRoH1B6G6A/giphy.gif" alt="Lunge exercise" loading="lazy">
+        <span class="gif-label">GIF : fente alternée</span>
+      </div>
+      <div class="yt-wrap">
+        <iframe src="https://www.youtube.com/embed/QOVaHwm-Q6U?rel=0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      </div>
+      <ul class="ex-steps">
+        <li data-n="1">Debout, mains sur les hanches</li>
+        <li data-n="2">Grand pas vers l'avant</li>
+        <li data-n="3">Genou arrière vers le sol (sans le poser brutalement)</li>
+        <li data-n="4">Genou avant au-dessus de la cheville</li>
+        <li data-n="5">Reviens et alterne l'autre jambe</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- MOUNTAIN CLIMBERS -->
+  <div class="exercise-card">
+    <div class="exercise-header" onclick="toggleCard(this)">
+      <div class="ex-left"><div class="ex-num core">3</div><div class="ex-info"><h4>Mountain Climbers</h4><p>Abdos · Fléchisseurs · Cardio</p></div></div>
+      <div style="display:flex;align-items:center;gap:7px"><span class="ex-sets">3 × 20–30s</span><span class="ex-arrow">▾</span></div>
+    </div>
+    <div class="exercise-body">
+      <div class="gif-wrap">
+        <img src="https://media1.giphy.com/media/VzlPEkuoqlgjehxvxk/giphy.gif" alt="Mountain climbers" loading="lazy">
+        <span class="gif-label">GIF : mountain climbers — alternance rapide des genoux</span>
+      </div>
+      <div class="yt-wrap">
+        <iframe src="https://www.youtube.com/embed/nmwgirgXLYM?rel=0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      </div>
+      <ul class="ex-steps">
+        <li data-n="1">Position de pompe (bras tendus), corps aligné</li>
+        <li data-n="2">Ramène un genou vers la poitrine, puis reviens</li>
+        <li data-n="3">Alterne les jambes en accélérant</li>
+        <li data-n="4">Garde les hanches basses</li>
+        <li data-n="5">Débutant : 1 rep/2 sec pour commencer</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- TIMER -->
+<div id="section-timer" class="section">
+  <div class="timer-section">
+    <div class="timer-label" id="timer-mode-label">Chrono libre</div>
+    <div class="timer-display" id="timer-display">00:00</div>
+    <div class="timer-btn-row">
+      <button class="timer-btn start" onclick="timerControl('start')">▶ Start</button>
+      <button class="timer-btn stop" onclick="timerControl('pause')">⏸ Pause</button>
+      <button class="timer-btn reset" onclick="timerControl('reset')">↺ Reset</button>
+    </div>
+    <div class="preset-row">
+      <button class="preset-btn" onclick="setCountdown(75)">75s repos</button>
+      <button class="preset-btn" onclick="setCountdown(60)">60s repos</button>
+      <button class="preset-btn" onclick="setCountdown(45)">45s repos</button>
+      <button class="preset-btn" onclick="setCountdown(30)">30s MC</button>
+    </div>
+  </div>
+  <div class="info-box"><h3>⏱ Structure des 25 minutes</h3><ul>
+    <li><strong>0–3 min</strong> : Échauffement</li>
+    <li><strong>3–22 min</strong> : 3 exercices × 3 séries (45–75s repos)</li>
+    <li><strong>22–25 min</strong> : Étirements</li>
+  </ul></div>
+</div>
+
+<!-- NUTRITION -->
+<div id="section-nutrition" class="section">
+  <div class="info-box"><h3>🎯 Objectif calorique</h3><p>~<strong>2400–2600 kcal/jour</strong> pour recomposition corporelle.</p></div>
+  <div class="section-title">Macros journalières</div>
+  <div class="macro-grid">
+    <div class="macro-card"><div class="val" style="color:var(--accent)">175<span style="font-size:11px">g</span></div><div class="name">Protéines</div><div class="unit">~1.8g/kg</div></div>
+    <div class="macro-card"><div class="val" style="color:var(--accent2)">270<span style="font-size:11px">g</span></div><div class="name">Glucides</div><div class="unit">énergie</div></div>
+    <div class="macro-card"><div class="val" style="color:var(--warm)">78<span style="font-size:11px">g</span></div><div class="name">Lipides</div><div class="unit">hormones</div></div>
+  </div>
+  <div class="info-box"><h3>🥚 Sources protéines pratiques</h3><ul>
+    <li><strong>Œufs</strong> — 6g/œuf</li>
+    <li><strong>Skyr / Yaourt grec</strong> — 10g/100g</li>
+    <li><strong>Thon en boîte</strong> — 25g/100g</li>
+    <li><strong>Poulet / Dinde</strong> — 25g/100g</li>
+    <li><strong>Lentilles</strong> — 9g/100g + fibres</li>
+  </ul></div>
+</div>
+
+<!-- PROGRESSION -->
+<div id="section-progression" class="section">
+  <div class="info-box"><h3>📈 Principe</h3><p>Chaque semaine, améliore <strong>un seul</strong> paramètre. Pas tout à la fois.</p></div>
+  <div class="prog-card">
+    <h4>💥 Pompes</h4>
+    <div class="prog-step"><div class="prog-dot" style="background:#8892aa"></div><p><strong>Niv. 0</strong> — Contre un mur / bureau incliné</p></div>
+    <div class="prog-step"><div class="prog-dot" style="background:#f7834f"></div><p><strong>Niv. 1</strong> — Sur les genoux, 3×8</p></div>
+    <div class="prog-step"><div class="prog-dot" style="background:#4f8ef7"></div><p><strong>Niv. 2</strong> — Classiques, 3×6–8</p></div>
+    <div class="prog-step"><div class="prog-dot" style="background:#38e0a1"></div><p><strong>Niv. 3</strong> — Classiques, 3×12–15</p></div>
+    <div class="prog-step"><div class="prog-dot" style="background:#c084fc"></div><p><strong>Niv. 4</strong> — Pieds surélevés / diamant</p></div>
+  </div>
+  <div class="prog-card">
+    <h4>🔗 Pull / Dos</h4>
+    <div class="prog-step"><div class="prog-dot" style="background:#8892aa"></div><p><strong>Niv. 0</strong> — Superman + rowing sac</p></div>
+    <div class="prog-step"><div class="prog-dot" style="background:#f7834f"></div><p><strong>Niv. 1</strong> — Traction australienne inclinée</p></div>
+    <div class="prog-step"><div class="prog-dot" style="background:#4f8ef7"></div><p><strong>Niv. 2</strong> — Traction australienne horizontale</p></div>
+    <div class="prog-step"><div class="prog-dot" style="background:#38e0a1"></div><p><strong>Niv. 3</strong> — Pieds surélevés</p></div>
+    <div class="prog-step"><div class="prog-dot" style="background:#c084fc"></div><p><strong>Niv. 4</strong> — Vraie traction (~6 mois)</p></div>
+  </div>
+  <div class="prog-card">
+    <h4>🦵 Jambes</h4>
+    <div class="prog-step"><div class="prog-dot" style="background:#f7834f"></div><p><strong>Niv. 1</strong> — Squat classique 3×15</p></div>
+    <div class="prog-step"><div class="prog-dot" style="background:#4f8ef7"></div><p><strong>Niv. 2</strong> — Jump squat, fentes marchées</p></div>
+    <div class="prog-step"><div class="prog-dot" style="background:#38e0a1"></div><p><strong>Niv. 3</strong> — Squat bulgare</p></div>
+    <div class="prog-step"><div class="prog-dot" style="background:#c084fc"></div><p><strong>Niv. 4</strong> — Pistol squat (3–6 mois)</p></div>
+  </div>
+  <div class="info-box"><h3>📅 Jalons réalistes</h3><ul>
+    <li><strong>Mois 1</strong> : Pompes genoux → premières classiques</li>
+    <li><strong>Mois 3</strong> : Circuit complet sans variante débutant</li>
+    <li><strong>Mois 6</strong> : Première vraie traction</li>
+    <li><strong>Mois 12</strong> : Physique transformé, -5 à -10 kg de gras</li>
+  </ul></div>
+</div>
+
+<script>
+function showTab(id,btn){document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});document.getElementById('section-'+id).classList.add('active');btn.classList.add('active')}
+function toggleCard(h){h.parentElement.classList.toggle('open')}
+var _ti=null,_s=0,_cd=false,_from=0,_run=false;
+function pad(n){return String(n).padStart(2,'0')}
+function updT(){var s=_cd?Math.max(0,_from-_s):_s;document.getElementById('timer-display').textContent=pad(Math.floor(s/60))+':'+pad(s%60);if(_cd&&s===0&&_run)timerControl('pause')}
+function timerControl(a){if(a==='start'&&!_run){_run=true;_ti=setInterval(function(){_s++;updT()},1000)}else if(a==='pause'){_run=false;clearInterval(_ti)}else if(a==='reset'){_run=false;clearInterval(_ti);_s=0;_cd=false;document.getElementById('timer-mode-label').textContent='Chrono libre';updT()}}
+function setCountdown(s){_run=false;clearInterval(_ti);_s=0;_cd=true;_from=s;document.getElementById('timer-mode-label').textContent='Repos '+s+'s';updT();_run=true;_ti=setInterval(function(){_s++;updT()},1000)}
+updT();
+</script>
+</body>
+</html>
