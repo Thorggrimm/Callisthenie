@@ -12,23 +12,18 @@
   header h1 { font-size: 20px; font-weight: 700; margin-bottom: 3px; }
   header p { font-size: 13px; color: #888; }
 
-  .days-nav { display: flex; overflow-x: auto; background: #fff; border-bottom: 1px solid #e0e0e0; scrollbar-width: none; position: sticky; top: 0; z-index: 10; }
-  .days-nav::-webkit-scrollbar { display: none; }
-  .day-btn { flex: none; padding: 12px 16px; font-size: 13px; font-weight: 600; color: #999; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; }
+  .days-nav { display: flex; background: #fff; border-bottom: 1px solid #e0e0e0; position: sticky; top: 0; z-index: 10; }
+  .day-btn { flex: 1; padding: 12px 4px; font-size: 12px; font-weight: 600; color: #999; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; text-align: center; line-height: 1.3; }
   .day-btn.active { color: #1a1a1a; border-bottom-color: #1a1a1a; }
-  .day-btn .tag { display: block; font-size: 10px; font-weight: 500; margin-top: 1px; }
+  .day-btn .tag { display: block; font-size: 10px; font-weight: 500; margin-top: 2px; }
   .tag.push { color: #c94a00; }
   .tag.pull { color: #005fcc; }
+  .tag.back { color: #7b00cc; }
   .tag.legs { color: #007a40; }
-  .tag.rest { color: #aaa; }
+  .day-btn { flex: 1; padding: 12px 4px; }
 
   .day-content { display: none; padding: 14px; }
   .day-content.active { display: block; }
-
-  .rest-card { background: #fff; border-radius: 12px; padding: 36px 20px; text-align: center; }
-  .rest-card .icon { font-size: 42px; margin-bottom: 12px; }
-  .rest-card h2 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-  .rest-card p { font-size: 14px; color: #666; line-height: 1.6; }
 
   /* Timer */
   .timer-block { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
@@ -49,6 +44,7 @@
   .session-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
   .icon-push { background: #fff0e8; }
   .icon-pull { background: #e8f0ff; }
+  .icon-back { background: #f5e8ff; }
   .icon-legs { background: #e8fff2; }
   .session-header h2 { font-size: 16px; font-weight: 700; line-height: 1.2; }
   .session-header p { font-size: 12px; color: #777; margin-top: 2px; }
@@ -59,10 +55,12 @@
   .ex-num { width: 32px; height: 32px; border-radius: 8px; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .n-push { background: #fff0e8; color: #c94a00; }
   .n-pull { background: #e8f0ff; color: #005fcc; }
+  .n-back { background: #f5e8ff; color: #7b00cc; }
   .n-legs { background: #e8fff2; color: #007a40; }
   .n-core { background: #f3eeff; color: #6030a0; }
   .ex-title { flex: 1; }
   .ex-title h3 { font-size: 15px; font-weight: 700; }
+  .ex-title p { font-size: 12px; color: #888; margin-top: 2px; }
   .ex-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
   .expill { background: #f2f2f2; border-radius: 20px; padding: 3px 10px; font-size: 12px; font-weight: 600; color: #444; }
   .ex-chevron { font-size: 20px; color: #ccc; transition: transform .2s; flex-shrink: 0; }
@@ -77,8 +75,10 @@
   .stat .val { font-size: 22px; font-weight: 700; line-height: 1; }
   .stat .lbl { font-size: 11px; color: #888; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-  .tip { margin: 12px 16px 0; background: #fff8f0; border-left: 3px solid #c94a00; border-radius: 0 8px 8px 0; padding: 10px 12px; font-size: 13px; color: #7a3000; line-height: 1.5; }
+  .tip { margin: 12px 16px 0; border-left: 3px solid #ccc; border-radius: 0 8px 8px 0; padding: 10px 12px; font-size: 13px; line-height: 1.5; }
+  .tip.orange { background: #fff8f0; border-color: #c94a00; color: #7a3000; }
   .tip.blue { background: #f0f5ff; border-color: #005fcc; color: #003380; }
+  .tip.purple { background: #f8f0ff; border-color: #7b00cc; color: #3d006e; }
   .tip.green { background: #f0fff6; border-color: #007a40; color: #004020; }
 
   .ex-steps { padding: 14px 16px; }
@@ -87,60 +87,54 @@
   .step:last-child { margin-bottom: 0; }
   .snum { width: 22px; height: 22px; border-radius: 50%; background: #f2f2f2; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #666; }
   .step p { font-size: 14px; color: #333; line-height: 1.5; padding-top: 2px; }
+
+  /* Planning */
+  .planning { background: #fff; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .planning h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #aaa; margin-bottom: 10px; }
+  .plan-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+  .plan-row:last-child { border-bottom: none; }
+  .plan-day { font-weight: 700; width: 32px; flex-shrink: 0; }
+  .plan-type { font-weight: 600; }
+  .plan-type.push { color: #c94a00; }
+  .plan-type.pull { color: #005fcc; }
+  .plan-type.back { color: #7b00cc; }
+  .plan-type.legs { color: #007a40; }
+  .plan-type.med { color: #aaa; }
+  .plan-sub { font-size: 12px; color: #aaa; margin-left: auto; }
 </style>
 </head>
 <body>
 
 <header>
   <h1>Plan Callisthénique</h1>
-  <p>25 min · 6 jours/semaine · Elliptique le midi</p>
+  <p>4 séances/semaine · Elliptique lun→ven le midi</p>
 </header>
 
 <nav class="days-nav">
-  <button class="day-btn active" onclick="showDay('lun',this)">Lun<span class="tag push">Push</span></button>
-  <button class="day-btn" onclick="showDay('mar',this)">Mar<span class="tag pull">Pull</span></button>
-  <button class="day-btn" onclick="showDay('mer',this)">Mer<span class="tag legs">Jambes</span></button>
-  <button class="day-btn" onclick="showDay('jeu',this)">Jeu<span class="tag push">Push</span></button>
-  <button class="day-btn" onclick="showDay('ven',this)">Ven<span class="tag pull">Pull</span></button>
-  <button class="day-btn" onclick="showDay('sam',this)">Sam<span class="tag legs">Jambes</span></button>
-  <button class="day-btn" onclick="showDay('dim',this)">Dim<span class="tag rest">Repos</span></button>
+  <button class="day-btn active" onclick="showDay('push',this)">💥 Push<span class="tag push">(Lun)</span></button>
+  <button class="day-btn" onclick="showDay('pull',this)">🔗 Pull<span class="tag pull">(Mar)</span></button>
+  <button class="day-btn" onclick="showDay('back',this)">🏋️ Back<span class="tag back">(Jeu)</span></button>
+  <button class="day-btn" onclick="showDay('legs',this)">🦵 Jambes<span class="tag legs">(Ven)</span></button>
 </nav>
 
-<!-- LUNDI -->
-<div id="day-lun" class="day-content active"></div>
-<!-- MARDI -->
-<div id="day-mar" class="day-content"></div>
-<!-- MERCREDI -->
-<div id="day-mer" class="day-content"></div>
-<!-- JEUDI -->
-<div id="day-jeu" class="day-content"></div>
-<!-- VENDREDI -->
-<div id="day-ven" class="day-content"></div>
-<!-- SAMEDI -->
-<div id="day-sam" class="day-content"></div>
-
-<!-- DIMANCHE -->
-<div id="day-dim" class="day-content">
-  <div class="rest-card">
-    <div class="icon">😴</div>
-    <h2>Jour de repos</h2>
-    <p>Le muscle se construit pendant la récupération, pas pendant l'effort. Ce jour est obligatoire, pas optionnel.</p>
-  </div>
-</div>
+<!-- Contenus générés par JS -->
+<div id="day-push" class="day-content active"></div>
+<div id="day-pull" class="day-content"></div>
+<div id="day-back" class="day-content"></div>
+<div id="day-legs" class="day-content"></div>
 
 <script>
-// ── DONNÉES ──────────────────────────────────────────────────────────────
 var SESSIONS = {
   push: {
     icon: '💥', iconClass: 'icon-push',
     title: 'Push — Pectoraux / Épaules / Triceps',
+    sub: 'Lundi · ~25 minutes',
     exercises: [
       {
         num: '1', numClass: 'n-push', name: 'Pompes',
         muscles: 'Pectoraux · Épaules · Triceps',
         series: '3', reps: '8–12', repos: '60s',
-        tip: '🟠 Débutant : pompes sur les genoux ou contre un mur.',
-        tipClass: '',
+        tip: '🟠 Débutant : pompes sur les genoux ou contre un mur.', tipClass: 'orange',
         steps: [
           'Mains légèrement plus larges que les épaules, doigts vers l\'extérieur',
           'Corps aligné tête → talons, abdos serrés',
@@ -153,8 +147,7 @@ var SESSIONS = {
         num: '2', numClass: 'n-push', name: 'Dips sur chaise',
         muscles: 'Triceps · Épaules',
         series: '3', reps: '8–10', repos: '60s',
-        tip: '🟠 Débutant : jambes pliées à 90° pour réduire le poids.',
-        tipClass: '',
+        tip: '🟠 Débutant : jambes pliées à 90° pour réduire le poids.', tipClass: 'orange',
         steps: [
           'Mains au bord d\'une chaise solide, largeur des hanches',
           'Fesses hors de la chaise, jambes tendues',
@@ -166,8 +159,7 @@ var SESSIONS = {
         num: '3', numClass: 'n-core', name: 'Planche',
         muscles: 'Abdos profonds · Lombaires',
         series: '3', reps: '20–40s', repos: '45s',
-        tip: '🟠 Débutant : planche sur les genoux.',
-        tipClass: '',
+        tip: '🟠 Débutant : planche sur les genoux.', tipClass: 'orange',
         steps: [
           'Avant-bras au sol, coudes sous les épaules',
           'Corps en ligne droite, hanches ni trop hautes ni affaissées',
@@ -178,48 +170,92 @@ var SESSIONS = {
   },
   pull: {
     icon: '🔗', iconClass: 'icon-pull',
-    title: 'Pull — Dos / Biceps / Trapèzes',
+    title: 'Pull — Biceps / Épaules arrière',
+    sub: 'Mardi · ~25 minutes',
     exercises: [
       {
-        num: '1', numClass: 'n-pull', name: 'Traction australienne',
-        muscles: 'Dos · Rhomboïdes · Biceps',
-        series: '3', reps: '6–10', repos: '75s',
-        tip: '📍 Sous une table solide. Corps tendu, serre les omoplates avant de tirer. Vérifie qu\'elle supporte ton poids.',
-        tipClass: 'blue',
+        num: '1', numClass: 'n-pull', name: 'Curl biceps élastique',
+        muscles: 'Biceps · Avant-bras',
+        series: '3', reps: '12–15', repos: '45s',
+        tip: '🎒 Sans élastique : tiens un sac à dos chargé de 3–6 kg par les bretelles, même mouvement.', tipClass: 'blue',
         steps: [
-          'Allonge-toi sous la table, attrape le bord à pleine main',
-          'Corps tendu comme une planche, talons au sol',
-          'Serre les omoplates, tire la poitrine vers la table',
-          'Descends lentement — 2 à 3 secondes',
-          'Progression : pieds surélevés sur une chaise'
+          'Debout, pied(s) sur l\'élastique, une extrémité dans chaque main',
+          'Bras tendus le long du corps, coudes collés aux flancs',
+          'Fléchis les coudes pour ramener les mains vers les épaules',
+          'Contracte fort les biceps en haut — 1 seconde',
+          'Redescends lentement en 2–3 secondes'
         ]
       },
       {
-        num: '2', numClass: 'n-pull', name: 'Superman',
+        num: '2', numClass: 'n-pull', name: 'Face pull élastique',
+        muscles: 'Épaules arrière · Trapèzes · Rotateurs',
+        series: '3', reps: '15', repos: '45s',
+        tip: '💪 Sans élastique : allonge-toi face au sol, bras en Y à 45°, lève les bras en pinçant les omoplates (Superman prise large).', tipClass: 'blue',
+        steps: [
+          'Élastique fixé à hauteur de visage — poignée de porte, pied de table retourné',
+          'Recule pour mettre de la tension, bras tendus devant toi',
+          'Tire les deux mains vers tes oreilles en écartant les coudes',
+          'Serre fort les omoplates en fin de mouvement — 1 seconde',
+          'Reviens lentement, garde la tension'
+        ]
+      },
+      {
+        num: '3', numClass: 'n-pull', name: 'Superman',
         muscles: 'Lombaires · Fessiers · Trapèzes',
         series: '3', reps: '12–15', repos: '45s',
-        tip: 'L\'exercice anti-posture développeur par excellence.',
-        tipClass: 'blue',
+        tip: 'Anti-posture développeur par excellence. Aucun matériel nécessaire.', tipClass: 'blue',
         steps: [
           'Face au sol, bras tendus devant, jambes droites',
           'Lève simultanément bras, poitrine ET jambes',
-          'Tiens 2 sec en contractant fessiers et dos',
-          'Redescends lentement',
-          'Variante facile : alterner bras droit + jambe gauche'
+          'Tiens 2 secondes en contractant fessiers et dos',
+          'Redescends lentement sans lâcher brutalement',
+          'Variante plus facile : alterner bras droit + jambe gauche'
+        ]
+      }
+    ]
+  },
+  back: {
+    icon: '🏋️', iconClass: 'icon-back',
+    title: 'Back — Grand dorsal / Rhomboïdes / Trapèzes',
+    sub: 'Mercredi · ~25 minutes',
+    exercises: [
+      {
+        num: '1', numClass: 'n-back', name: 'Rowing élastique à deux bras',
+        muscles: 'Grand dorsal · Rhomboïdes · Biceps',
+        series: '3', reps: '12', repos: '60s',
+        tip: '🎒 Sans élastique : assis au sol, sac à dos chargé tenu à deux mains par les bretelles, même mouvement de tirage vers le ventre.', tipClass: 'purple',
+        steps: [
+          'Assieds-toi au sol, jambes tendues, élastique enroulé autour des pieds',
+          'Dos droit, légèrement penché en arrière (environ 80°)',
+          'Tire les deux mains vers ton ventre en serrant les coudes le long du corps',
+          'Serre fort les omoplates ensemble — 1 seconde',
+          'Reviens lentement bras tendus, sans arrondir le dos'
         ]
       },
       {
-        num: '3', numClass: 'n-pull', name: 'Rowing sac lesté',
-        muscles: 'Grand dorsal · Biceps',
-        series: '3', reps: '10–12', repos: '60s',
-        tip: '🎒 Sac à dos rempli de 5–10 kg de bouteilles d\'eau.',
-        tipClass: 'blue',
+        num: '2', numClass: 'n-back', name: 'Tirage vertical élastique',
+        muscles: 'Grand dorsal · Trapèzes inférieurs',
+        series: '3', reps: '12', repos: '60s',
+        tip: '💪 Sans élastique : Superman prise en Y — allongé face au sol, bras à 45°, lève les bras en imaginant éloigner tes coudes de ton corps.', tipClass: 'purple',
         steps: [
-          'Penché à ~45°, dos plat, genoux légèrement fléchis',
-          'Tiens le sac dans une main, bras tendu',
+          'Élastique fixé au-dessus de la tête, assis ou agenouillé',
+          'Attrape l\'élastique bras tendus vers le haut',
+          'Tire les coudes vers les hanches en ramenant les omoplates vers le bas',
+          'Imagine que tu essaies de mettre tes omoplates dans tes poches arrière',
+          'Reviens lentement bras tendus — 2 à 3 secondes'
+        ]
+      },
+      {
+        num: '3', numClass: 'n-back', name: 'Rowing sac lesté unilatéral',
+        muscles: 'Grand dorsal · Biceps · Épaule arrière',
+        series: '3', reps: '10–12', repos: '60s',
+        tip: '🎒 Sac à dos rempli de 5–10 kg de bouteilles d\'eau. Pas d\'élastique nécessaire.', tipClass: 'purple',
+        steps: [
+          'Penché à ~45° vers l\'avant, dos plat, genou et main libres appuyés sur une chaise',
+          'Sac dans la main libre, bras tendu vers le sol',
           'Tire le coude vers le plafond en serrant l\'omoplate',
-          'Redescends lentement, sans balancer le corps',
-          'Toutes les reps d\'un côté, puis change'
+          'Redescends lentement — 2 à 3 secondes',
+          'Toutes les reps d\'un côté, puis change de bras'
         ]
       }
     ]
@@ -227,18 +263,18 @@ var SESSIONS = {
   legs: {
     icon: '🦵', iconClass: 'icon-legs',
     title: 'Jambes — Quadriceps / Fessiers / Core',
+    sub: 'Vendredi · ~25 minutes',
     exercises: [
       {
         num: '1', numClass: 'n-legs', name: 'Squat',
         muscles: 'Quadriceps · Fessiers · Ischios',
         series: '3', reps: '15–20', repos: '60s',
-        tip: 'À 97 kg tu es déjà lesté — chaque squat est efficace. Priorité à la forme avant la vitesse.',
-        tipClass: 'green',
+        tip: 'À 97 kg tu es déjà lesté — chaque squat est efficace. Priorité à la forme avant la vitesse.', tipClass: 'green',
         steps: [
-          'Pieds à largeur d\'épaules, pointes vers l\'extérieur',
-          'Bras tendus devant, regard droit',
-          'Descends comme pour t\'asseoir, genoux dans l\'axe',
-          'Cuisses parallèles au sol minimum',
+          'Pieds à largeur d\'épaules, pointes légèrement vers l\'extérieur',
+          'Bras tendus devant pour l\'équilibre, regard droit',
+          'Descends comme pour t\'asseoir, genoux dans l\'axe des orteils',
+          'Cuisses parallèles au sol minimum — plus bas si tu peux',
           'Pousse dans les talons pour remonter'
         ]
       },
@@ -246,9 +282,9 @@ var SESSIONS = {
         num: '2', numClass: 'n-legs', name: 'Fentes alternées',
         muscles: 'Quadriceps · Fessiers · Équilibre',
         series: '3', reps: '10/jambe', repos: '60s',
-        tip: null,
-        tipClass: '',
+        tip: null, tipClass: '',
         steps: [
+          'Debout, mains sur les hanches',
           'Grand pas en avant',
           'Genou arrière vers le sol sans le poser brutalement',
           'Genou avant au-dessus de la cheville, pas en avant',
@@ -257,13 +293,13 @@ var SESSIONS = {
       },
       {
         num: '3', numClass: 'n-core', name: 'Mountain Climbers',
-        muscles: 'Abdos · Fléchisseurs · Cardio',
+        muscles: 'Abdos · Fléchisseurs de hanche · Cardio',
         series: '3', reps: '20–30s', repos: '45s',
-        tip: '🟠 Débutant : commence lentement, 1 rep toutes les 2 secondes.',
-        tipClass: 'green',
+        tip: '🟠 Débutant : commence lentement, 1 rep toutes les 2 secondes.', tipClass: 'green',
         steps: [
-          'Position de pompe, bras tendus, corps aligné',
-          'Ramène un genou vers la poitrine, alterne rapidement',
+          'Position de pompe — bras tendus, corps aligné',
+          'Ramène un genou vers la poitrine, puis reviens',
+          'Alterne les jambes en accélérant progressivement',
           'Hanches basses — ne les lève pas'
         ]
       }
@@ -271,12 +307,6 @@ var SESSIONS = {
   }
 };
 
-var DAY_TYPES = {
-  lun: 'push', mar: 'pull', mer: 'legs',
-  jeu: 'push', ven: 'pull', sam: 'legs'
-};
-
-// ── RENDU ─────────────────────────────────────────────────────────────────
 function buildTimer(day) {
   return '<div class="timer-block">' +
     '<div class="timer-display" id="td-' + day + '">00:00</div>' +
@@ -331,13 +361,11 @@ function buildExercise(ex, day, idx) {
 }
 
 function buildDay(day) {
-  var type = DAY_TYPES[day];
-  var s = SESSIONS[type];
-  var suffix = (day === 'jeu' || day === 'ven' || day === 'sam') ? ' — même séance' : '';
+  var s = SESSIONS[day];
   var html = buildTimer(day);
   html += '<div class="session-header">' +
     '<div class="session-icon ' + s.iconClass + '">' + s.icon + '</div>' +
-    '<div><h2>' + s.title + suffix + '</h2><p>3 exercices · ~25 minutes</p></div>' +
+    '<div><h2>' + s.title + '</h2><p>' + s.sub + '</p></div>' +
   '</div>';
   s.exercises.forEach(function(ex, i) {
     html += buildExercise(ex, day, i + 1);
@@ -345,12 +373,10 @@ function buildDay(day) {
   return html;
 }
 
-// Injecter dans chaque onglet
-Object.keys(DAY_TYPES).forEach(function(day) {
+['push','pull','back','legs'].forEach(function(day) {
   document.getElementById('day-' + day).innerHTML = buildDay(day);
 });
 
-// ── NAVIGATION ────────────────────────────────────────────────────────────
 function showDay(id, btn) {
   document.querySelectorAll('.day-content').forEach(function(d) { d.classList.remove('active'); });
   document.querySelectorAll('.day-btn').forEach(function(b) { b.classList.remove('active'); });
@@ -358,20 +384,14 @@ function showDay(id, btn) {
   btn.classList.add('active');
 }
 
-function toggle(id) {
-  document.getElementById(id).classList.toggle('open');
-}
+function toggle(id) { document.getElementById(id).classList.toggle('open'); }
 
-// ── TIMERS ────────────────────────────────────────────────────────────────
 var timers = {};
-
 function getT(day) {
   if (!timers[day]) timers[day] = { interval: null, seconds: 0, countdown: false, from: 0, running: false };
   return timers[day];
 }
-
 function p2(n) { return String(n).padStart(2, '0'); }
-
 function render(day) {
   var t = getT(day);
   var s = t.countdown ? Math.max(0, t.from - t.seconds) : t.seconds;
@@ -382,37 +402,31 @@ function render(day) {
   }
   if (t.countdown && s === 0 && t.running) tPause(day);
 }
-
 function tStart(day) {
   var t = getT(day);
   if (t.running) return;
   t.running = true;
   t.interval = setInterval(function() { t.seconds++; render(day); }, 1000);
 }
-
 function tPause(day) {
   var t = getT(day);
   t.running = false;
   clearInterval(t.interval);
   render(day);
 }
-
 function tReset(day) {
   var t = getT(day);
   t.running = false;
   clearInterval(t.interval);
-  t.seconds = 0;
-  t.countdown = false;
+  t.seconds = 0; t.countdown = false;
   var lbl = document.getElementById('tl-' + day);
   if (lbl) lbl.textContent = 'Chrono libre';
   render(day);
 }
-
 function tCD(day, secs) {
   tReset(day);
   var t = getT(day);
-  t.countdown = true;
-  t.from = secs;
+  t.countdown = true; t.from = secs;
   var lbl = document.getElementById('tl-' + day);
   if (lbl) lbl.textContent = 'Repos ' + secs + 's';
   render(day);
